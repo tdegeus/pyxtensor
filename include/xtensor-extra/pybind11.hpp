@@ -7,6 +7,8 @@
 #ifndef XTENSOREXTRA_PYBIND11_H
 #define XTENSOREXTRA_PYBIND11_H
 
+#define UNUSED(p) ( (void)(p) )
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
@@ -16,5 +18,6 @@
 #include <xtensor/xfixed.hpp>
 
 #include "pybind11_xtensor.hpp"
+#include "pybind11_xtensor_fixed.hpp"
 
 #endif

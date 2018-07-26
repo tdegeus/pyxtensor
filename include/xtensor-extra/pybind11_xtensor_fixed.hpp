@@ -4,8 +4,8 @@
 
 ================================================================================================= */
 
-#ifndef XTENSOREXTRA_PYBIND11_XTENSOR_HPP
-#define XTENSOREXTRA_PYBIND11_XTENSOR_HPP
+#ifndef XTENSOREXTRA_PYBIND11_XTENSOR_FIXED_HPP
+#define XTENSOREXTRA_PYBIND11_XTENSOR_FIXED_HPP
 
 #include "pybind11.hpp"
 
@@ -15,16 +15,16 @@ namespace pybind11 {
 namespace detail {
 
 // =================================================================================================
-// type caster: xt::xtensor <-> NumPy-array
+// type caster: xt::xtensor_fixed <-> NumPy-array
 // =================================================================================================
 
-template<typename T, size_t N> struct type_caster<xt::xtensor<T,N>>
+template<typename T, typename S> struct type_caster<xt::xtensor_fixed<T,S>>
 {
 public:
 
-  using tensor = xt::xtensor<T,N>;
+  using tensor = xt::xtensor_fixed<T,S>;
 
-  PYBIND11_TYPE_CASTER(tensor, _("xt::xtensor<T,N>"));
+  PYBIND11_TYPE_CASTER(tensor, _("xt::xtensor_fixed<T,S>"));
 
   // Python -> C++
   // -------------
@@ -49,6 +49,11 @@ public:
     // - copy
     for ( ssize_t i = 0 ; i < dimension ; ++i ) shape[i] = buf.shape()[i];
 
+    // - temporary variable to check of shape: really not elegant, should be improved
+    xt::xtensor_fixed<T,S> tmp = xt::empty<T>(shape);
+    // - check shape
+    for ( size_t i = 0 ; i < shape.size() ; ++i ) if ( tmp.shape()[i] != shape[i] ) return false;
+
     // - all checks passed : create the proper C++ variable
     value = xt::empty<T>(shape);
     // - copy all data
@@ -62,7 +67,7 @@ public:
   // -------------
 
   static py::handle cast(
-    const xt::xtensor<T,N>& src, py::return_value_policy policy, py::handle parent
+    const xt::xtensor_fixed<T,S>& src, py::return_value_policy policy, py::handle parent
   )
   {
     // - avoid compiler warnings
