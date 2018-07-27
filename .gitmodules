@@ -1,6 +1,0 @@
-[submodule "xtensor"]
-	path = xtensor
-	url = https://github.com/QuantStack/xtensor.git
-[submodule "xtl"]
-	path = xtl
-	url = https://github.com/QuantStack/xtl.git
