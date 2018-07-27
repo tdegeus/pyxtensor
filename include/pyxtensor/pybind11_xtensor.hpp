@@ -1,13 +1,13 @@
 /* =================================================================================================
 
-(c - MIT) T.W.J. de Geus (Tom) | tom@geus.me | www.geus.me | github.com/tdegeus/xtensor-extra
+(c - MIT) T.W.J. de Geus (Tom) | tom@geus.me | www.geus.me | github.com/tdegeus/pyxtensor
 
 ================================================================================================= */
 
-#ifndef XTENSOREXTRA_PYBIND11_XTENSOR_FIXED_HPP
-#define XTENSOREXTRA_PYBIND11_XTENSOR_FIXED_HPP
+#ifndef PYXTENSOR_PYBIND11_XTENSOR_HPP
+#define PYXTENSOR_PYBIND11_XTENSOR_HPP
 
-#include "pybind11.hpp"
+#include "pyxtensor.hpp"
 
 namespace py = pybind11;
 
@@ -15,16 +15,16 @@ namespace pybind11 {
 namespace detail {
 
 // =================================================================================================
-// type caster: xt::xtensor_fixed <-> NumPy-array
+// type caster: xt::xtensor <-> NumPy-array
 // =================================================================================================
 
-template<typename T, typename S> struct type_caster<xt::xtensor_fixed<T,S>>
+template<typename T, size_t N> struct type_caster<xt::xtensor<T,N>>
 {
 public:
 
-  using tensor = xt::xtensor_fixed<T,S>;
+  using tensor = xt::xtensor<T,N>;
 
-  PYBIND11_TYPE_CASTER(tensor, _("xt::xtensor_fixed<T,S>"));
+  PYBIND11_TYPE_CASTER(tensor, _("xt::xtensor<T,N>"));
 
   // Python -> C++
   // -------------
@@ -49,11 +49,6 @@ public:
     // - copy
     for ( ssize_t i = 0 ; i < dimension ; ++i ) shape[i] = buf.shape()[i];
 
-    // - temporary variable to check of shape: really not elegant, should be improved
-    xt::xtensor_fixed<T,S> tmp = xt::empty<T>(shape);
-    // - check shape
-    for ( size_t i = 0 ; i < shape.size() ; ++i ) if ( tmp.shape()[i] != shape[i] ) return false;
-
     // - all checks passed : create the proper C++ variable
     value = xt::empty<T>(shape);
     // - copy all data
@@ -67,13 +62,9 @@ public:
   // -------------
 
   static py::handle cast(
-    const xt::xtensor_fixed<T,S>& src, py::return_value_policy policy, py::handle parent
+    const xt::xtensor<T,N>& src, py::return_value_policy, py::handle
   )
   {
-    // - avoid compiler warnings
-    UNUSED(policy);
-    UNUSED(parent);
-
     // - get shape and strides
     auto xshape   = src.shape();
     auto xstrides = src.strides();
