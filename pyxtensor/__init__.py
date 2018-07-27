@@ -106,6 +106,105 @@ Define class to build the extension.
 
 # ==================================================================================================
 
+def find_xtl(hint=None):
+  r'''
+Try to find the xtl library. If successful the include directory is returned.
+  '''
+
+  # search with pkgconfig
+  # ---------------------
+
+  try:
+
+    import pkgconfig
+
+    if pkgconfig.installed('xtl','>0.4.0'):
+      return pkgconfig.parse('xtl')['include_dirs'][0]
+
+  except:
+    pass
+
+  # manual search
+  # -------------
+
+  search_dirs = [] if hint is None else hint
+  search_dirs += [
+    "/usr/local/include",
+    "/usr/local/homebrew/include",
+    "/opt/local/var/macports/software",
+    "/opt/local/include",
+    "/usr/include",
+    "/usr/include/local",
+    "/usr/include",
+  ]
+
+  for d in search_dirs:
+    path = os.path.join(d, "xtl", "xtensor_config.hpp")
+    if os.path.exists(path):
+      src = open(path, "r").read()
+      v1 = re.findall("#define XTL_VERSION_MAJOR (.+)", src)
+      v2 = re.findall("#define XTL_VERSION_MINOR (.+)", src)
+      v3 = re.findall("#define XTL_VERSION_PATCH (.+)", src)
+      if not len(v1) or not len(v2) or not len(v3):
+        continue
+      v = "{0}.{1}.{2}".format(v1[0], v2[0], v3[0])
+      print("Found xtl version {0} in: {1}".format(v, d))
+      return d
+
+  return None
+
+# ==================================================================================================
+
+def find_xtensor(hint=None):
+  r'''
+Try to find the xtensor library. If successful the include directory is returned.
+  '''
+
+  # search with pkgconfig
+  # ---------------------
+
+  try:
+
+    import pkgconfig
+
+    if pkgconfig.installed('xtensor','>0.16.0'):
+      return pkgconfig.parse('xtensor')['include_dirs'][0]
+
+  except:
+    pass
+
+  # manual search
+  # -------------
+
+  search_dirs = [] if hint is None else hint
+  search_dirs += [
+    "/usr/local/include",
+    "/usr/local/homebrew/include",
+    "/opt/local/var/macports/software",
+    "/opt/local/include",
+    "/usr/include",
+    "/usr/include/local",
+    "/usr/include",
+  ]
+
+  for d in search_dirs:
+    path = os.path.join(d, "xtensor", "xtensor_config.hpp")
+    print(path)
+    if os.path.exists(path):
+      src = open(path, "r").read()
+      v1 = re.findall("#define XTENSOR_VERSION_MAJOR (.+)", src)
+      v2 = re.findall("#define XTENSOR_VERSION_MINOR (.+)", src)
+      v3 = re.findall("#define XTENSOR_VERSION_PATCH (.+)", src)
+      if not len(v1) or not len(v2) or not len(v3):
+        continue
+      v = "{0}.{1}.{2}".format(v1[0], v2[0], v3[0])
+      print("Found xtensor version {0} in: {1}".format(v, d))
+      return d
+
+  return None
+
+# ==================================================================================================
+
 def find_eigen(hint=None):
   r'''
 Try to find the Eigen library. If successful the include directory is returned.
