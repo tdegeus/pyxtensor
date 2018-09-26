@@ -1,0 +1,9 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+
+Name: pyxtensor
+Description: Python interface for xtensor
+Requires:
+Version: @PYXTENSOR_VERSION_NUMBER@
+Libs:
+Cflags: -I${prefix}/@PYXTENSOR_INCLUDE_DIR@
