@@ -61,9 +61,7 @@ public:
   // C++ -> Python
   // -------------
 
-  static py::handle cast(
-    const xt::xtensor<T,N>& src, py::return_value_policy, py::handle
-  )
+  static py::handle cast(const xt::xtensor<T,N>& src, py::return_value_policy, py::handle)
   {
     // - get shape and strides
     auto xshape   = src.shape();

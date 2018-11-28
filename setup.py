@@ -1,6 +1,3 @@
-desc = '''
-Extra functions for xtensor.
-'''
 
 import re, os
 from setuptools import setup
@@ -14,9 +11,9 @@ __version__ = '.'.join([world,major,minor])
 
 setup(
   name             = 'pyxtensor',
-  description      = 'Extra functions for xtensor.',
-  long_description = desc,
-  keywords         = 'C++, C++11, Python bindings, pybind11',
+  description      = 'pybind11 details for xtensor.',
+  long_description = open('README.md').read(),
+  keywords         = 'C++, C++11, C++14, Python bindings, pybind11, xtensor',
   version          = __version__,
   license          = 'MIT',
   author           = 'Tom de Geus',
