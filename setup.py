@@ -22,6 +22,7 @@ setup(
   packages         = ['pyxtensor'],
   headers          = [
     'include/pyxtensor/pyxtensor.hpp',
+    'include/pyxtensor/pybind11_xarray.hpp',
     'include/pyxtensor/pybind11_xtensor.hpp',
     'include/pyxtensor/pybind11_xtensor_fixed.hpp',
   ],

@@ -4,8 +4,8 @@
 
 ================================================================================================= */
 
-#ifndef PYXTENSOR_PYBIND11_XTENSOR_HPP
-#define PYXTENSOR_PYBIND11_XTENSOR_HPP
+#ifndef PYXTENSOR_PYBIND11_XARRAY_HPP
+#define PYXTENSOR_PYBIND11_XARRAY_HPP
 
 #include "pyxtensor.hpp"
 
@@ -15,16 +15,16 @@ namespace pybind11 {
 namespace detail {
 
 // =================================================================================================
-// type caster: xt::xtensor <-> NumPy-array
+// type caster: xt::xarray <-> NumPy-array
 // =================================================================================================
 
-template<typename T, size_t N> struct type_caster<xt::xtensor<T,N>>
+template<typename T> struct type_caster<xt::xarray<T>>
 {
 public:
 
-  using tensor = xt::xtensor<T,N>;
+  using tensor = xt::xarray<T>;
 
-  PYBIND11_TYPE_CASTER(tensor, _("xt::xtensor<T,N>"));
+  PYBIND11_TYPE_CASTER(tensor, _("xt::xarray<T>"));
 
   // Python -> C++
   // -------------
@@ -39,13 +39,15 @@ public:
     // - check
     if ( !buf ) return false;
 
-    // - check dimension of the input array (rank, number of indices)
-    if ( buf.ndim() != N ) return false;
+    // - get  dimension of the input array (rank, number of indices)
+    auto N = buf.ndim();
+    // - check
+    if ( N < 1 ) return false;
 
     // - shape of the input array
     std::vector<size_t> shape(N);
     // - copy
-    for ( size_t i = 0 ; i < N ; ++i ) shape[i] = buf.shape()[i];
+    for ( ssize_t i = 0 ; i < N ; ++i ) shape[i] = buf.shape()[i];
 
     // - all checks passed : create the proper C++ variable
     value = xt::empty<T>(shape);
@@ -59,7 +61,7 @@ public:
   // C++ -> Python
   // -------------
 
-  static py::handle cast(const xt::xtensor<T,N>& src, py::return_value_policy, py::handle)
+  static py::handle cast(const xt::xarray<T>& src, py::return_value_policy, py::handle)
   {
     // - get shape and strides
     auto xshape   = src.shape();

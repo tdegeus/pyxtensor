@@ -21,7 +21,7 @@
 
 #define PYXTENSOR_WORLD_VERSION 0
 #define PYXTENSOR_MAJOR_VERSION 0
-#define PYXTENSOR_MINOR_VERSION 3
+#define PYXTENSOR_MINOR_VERSION 4
 
 #define PYXTENSOR_VERSION_AT_LEAST(x,y,z) \
   (PYXTENSOR_WORLD_VERSION>x || (PYXTENSOR_WORLD_VERSION>=x && \
@@ -40,6 +40,7 @@
 
 // =================================================================================================
 
+#include "pybind11_xarray.hpp"
 #include "pybind11_xtensor.hpp"
 #include "pybind11_xtensor_fixed.hpp"
 
