@@ -39,7 +39,7 @@ public:
     // - check
     if ( !buf ) return false;
 
-    // - get  dimension of the input array (rank, number of indices)
+    // - get dimension of the input array (rank, number of indices)
     auto N = buf.ndim();
     // - check
     if ( N < 1 ) return false;
