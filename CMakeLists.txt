@@ -35,13 +35,13 @@ set(CPPMAT_VERSION_NUMBER ${world_version}.${major_version}.${minor_version})
 # paths
 # -----
 
-set(CPPMAT_ROOT_DIR          "${CMAKE_INSTALL_PREFIX}")
-set(CPPMAT_INCLUDE_DIR       "${CMAKE_INSTALL_INCLUDEDIR}")
-set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
+set(CPPMAT_ROOT_DIR "${CMAKE_INSTALL_PREFIX}")
+set(CPPMAT_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
+set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
 set(CMAKEPACKAGE_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
-set(PKGCONFIG_INSTALL_DIR    "${CMAKE_INSTALL_DATADIR}/pkgconfig")
-set(fcmake                   "${PROJECT_NAME}Config.cmake")
-set(fpkg                     "${PROJECT_NAME}.pc")
+set(PKGCONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/pkgconfig")
+set(fcmake "${PROJECT_NAME}Config.cmake")
+set(fpkg "${PROJECT_NAME}.pc")
 
 # options
 # -------

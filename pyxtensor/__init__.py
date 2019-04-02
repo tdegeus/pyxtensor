@@ -86,7 +86,7 @@ Define class to build the extension.
 
   c_opts = {
     'msvc': ['/EHsc'],
-    'unix': [],
+    'unix': ['-O3', '-march=native'],
   }
 
   if sys.platform == 'darwin':
@@ -94,6 +94,7 @@ Define class to build the extension.
 
   def build_extensions(self):
     ct = self.compiler.compiler_type
+    print(ct)
     opts = self.c_opts.get(ct, [])
     if ct == 'unix':
       opts.append('-DVERSION_INFO="%s"' % self.distribution.get_version())
@@ -199,6 +200,56 @@ Try to find the xtensor library. If successful the include directory is returned
         continue
       v = "{0}.{1}.{2}".format(v1[0], v2[0], v3[0])
       print("Found xtensor version {0} in: {1}".format(v, d))
+      return d
+
+  return None
+
+# ==================================================================================================
+
+def find_xsimd(hint=None):
+  r'''
+Try to find the xsimd library. If successful the include directory is returned.
+  '''
+
+  # search with pkgconfig
+  # ---------------------
+
+  try:
+
+    import pkgconfig
+
+    if pkgconfig.installed('xsimd','>0.16.0'):
+      return pkgconfig.parse('xsimd')['include_dirs'][0]
+
+  except:
+    pass
+
+  # manual search
+  # -------------
+
+  search_dirs = [] if hint is None else hint
+  search_dirs += [
+    "/usr/local/include",
+    "/usr/local/homebrew/include",
+    "/opt/local/var/macports/software",
+    "/opt/local/include",
+    "/usr/include",
+    "/usr/include/local",
+    "/usr/include",
+  ]
+
+  for d in search_dirs:
+    path = os.path.join(d, "xsimd", "config", "xsimd_config.hpp")
+    print(path)
+    if os.path.exists(path):
+      src = open(path, "r").read()
+      v1 = re.findall("#define XSIMD_VERSION_MAJOR (.+)", src)
+      v2 = re.findall("#define XSIMD_VERSION_MINOR (.+)", src)
+      v3 = re.findall("#define XSIMD_VERSION_PATCH (.+)", src)
+      if not len(v1) or not len(v2) or not len(v3):
+        continue
+      v = "{0}.{1}.{2}".format(v1[0], v2[0], v3[0])
+      print("Found xsimd version {0} in: {1}".format(v, d))
       return d
 
   return None
