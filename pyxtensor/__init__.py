@@ -1,7 +1,9 @@
 
-import os, sys, re
+import os
+import sys
+import re
 
-from setuptools                   import Extension
+from setuptools import Extension
 from setuptools.command.build_ext import build_ext
 
 # ==================================================================================================
