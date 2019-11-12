@@ -11,7 +11,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
-            - python3
       env: COMPILER=gcc GCC=4.9
     - os: linux
       addons:
@@ -20,7 +19,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-            - python3
       env: COMPILER=gcc GCC=5
     - os: linux
       addons:
@@ -29,7 +27,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-            - python3
       env: COMPILER=gcc GCC=6
     - os: linux
       addons:
@@ -38,7 +35,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
-            - python3
       env: COMPILER=gcc GCC=7
     - os: linux
       addons:
@@ -48,7 +44,6 @@ matrix:
             - llvm-toolchain-trusty-6.0
           packages:
             - clang-6.0
-            - python3
       env: COMPILER=clang CLANG=6.0
     - os: osx
       osx_image: xcode8
@@ -84,6 +79,7 @@ install:
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
+    - conda install python
     - conda install cmake -c conda-forge
     - conda install xtensor -c conda-forge
     # Install library
@@ -93,8 +89,7 @@ install:
     - sudo make install
     - cd ..
     - rm -rf build
-    - python3 setup.py build
-    - python3 setup.py install
+    - python setup.py install
 script:
     # Build example
     - cd example
@@ -103,7 +98,7 @@ script:
     - make
     - cd ..
     - rm -rf build
-    - python3 setup.py build
-    - python3 setup.py install
-    - python3 main.py
+    - python setup.py build
+    - python setup.py install
+    - python main.py
 
