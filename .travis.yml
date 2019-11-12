@@ -92,7 +92,7 @@ install:
     - cmake ..
     - sudo make install
     - cd ..
-    - rm -r build
+    - rm -rf build
     - python3 setup.py build
     - python3 setup.py install
 script:
@@ -102,7 +102,7 @@ script:
     - cmake ..
     - make
     - cd ..
-    - rm -r build
+    - rm -rf build
     - python3 setup.py build
     - python3 setup.py install
     - python3 main.py
