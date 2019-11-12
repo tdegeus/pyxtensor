@@ -25,6 +25,8 @@ This library provides details for [pybind11](https://github.com/pybind/pybind11)
 
 ## Getting pyxtensor
 
+The are two ways of practically using *pyxtensor*. One way is to 'install' the C++ headers somewhere and use *CMake* or *pkg-config* to find the C++ headers. The other way is to 'install' the Python library that comes with *pyxtensor* and let it 'install' the C++ headers in the correct Python folder, and use *Python* to find the C++ headers. 
+
 ### Using pip
 
 ```bash
