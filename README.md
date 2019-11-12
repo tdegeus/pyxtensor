@@ -1,7 +1,7 @@
 # pyxtensor
 
 [![Travis](https://travis-ci.org/tdegeus/pyxtensor.svg?branch=master)](https://travis-ci.org/tdegeus/pyxtensor)
-<!-- [![Appveyor](https://ci.appveyor.com/api/projects/status/dljjg79povwgncuf?svg=true)](https://ci.appveyor.com/project/tdegeus/pyxtensor) -->
+[![Appveyor](https://ci.appveyor.com/api/projects/status/0s6ytkty29f110ks?svg=true)](https://ci.appveyor.com/project/tdegeus/pyxtensor)
 
 <!-- MarkdownTOC -->
 
