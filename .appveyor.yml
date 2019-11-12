@@ -44,7 +44,7 @@ install:
 build_script:
   - cd example
   - cmake -A x64 .
-  - nmake
+  - nmake example
   - python setup.py build
   - python setup.py install
   - python main.py
