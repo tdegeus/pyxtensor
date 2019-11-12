@@ -1,9 +1,7 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-exec_prefix=${prefix}
+includedir=${prefix}/include
 
 Name: pyxtensor
-Description: Python interface for xtensor
-Requires:
-Version: @PYXTENSOR_VERSION_NUMBER@
-Libs:
-Cflags: -I${prefix}/@PYXTENSOR_INCLUDE_DIR@
+Description: pybind11 details for xtensor
+Version: @pyxtensor_VERSION@
+Cflags: -I${includedir}

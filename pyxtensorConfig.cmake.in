@@ -1,4 +1,13 @@
-set(PYXTENSOR_FOUND 1)
+# pyxtensor cmake module
+# This module sets the following variables:
+#
+#   pyxtensor_FOUND - true if pyxtensor found
+#   pyxtensor_INCLUDE_DIRS - the directory containing pyxtensor headers
+#   pyxtensor_LIBRARY - empty
 
-set(PYXTENSOR_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(PYXTENSOR_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+@PACKAGE_INIT@
+
+if(NOT TARGET @PROJECT_NAME@)
+  include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+  get_target_property(@PROJECT_NAME@_INCLUDE_DIRS pyxtensor INTERFACE_INCLUDE_DIRECTORIES)
+endif()
