@@ -82,6 +82,7 @@ install:
     - conda install python
     - conda install cmake -c conda-forge
     - conda install xtensor -c conda-forge
+    - conda install pybind11 -c conda-forge
     # Install library
     - mkdir build
     - cd build
