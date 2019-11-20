@@ -28,6 +28,7 @@ init:
   - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
 
 install:
+  # Set environment using Conda
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
@@ -36,6 +37,7 @@ install:
   - conda install cmake -c conda-forge
   - conda install xtensor -c conda-forge
   - conda install pybind11 -c conda-forge
+  # Install library
   - cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DCMAKE_BUILD_TYPE=RELEASE .
   - nmake
   - nmake install
