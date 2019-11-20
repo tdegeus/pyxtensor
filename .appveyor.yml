@@ -44,6 +44,7 @@ install:
   - python setup.py install
 
 build_script:
+  # Compile (using CMake and Python) and run example
   - cd example
   - cmake -G "NMake Makefiles" .
   - nmake

@@ -89,10 +89,10 @@ install:
     - sudo make install
     - python setup.py install
 script:
+    # Compile (using CMake and Python) and run example
     - cd example
     - cmake .
     - make
     - python setup.py build
     - python setup.py install
     - python main.py
-
