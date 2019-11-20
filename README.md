@@ -3,12 +3,22 @@
 [![Travis](https://travis-ci.org/tdegeus/pyxtensor.svg?branch=master)](https://travis-ci.org/tdegeus/pyxtensor)
 [![Appveyor](https://ci.appveyor.com/api/projects/status/0s6ytkty29f110ks?svg=true)](https://ci.appveyor.com/project/tdegeus/pyxtensor)
 
+>   **Disclaimer**
+>   
+>   This library is free to use under the [MIT](https://github.com/tdegeus/pyxtensor/blob/master/LICENSE). Any additions are very much appreciated, in terms of suggested functionality, code, documentation, testimonials, word-of-mouth advertisement, etc. Bug reports or feature requests can be filed on [GitHub](https://github.com/tdegeus/pyxtensor). As always, the code comes with no guarantee. None of the developers can be held responsible for possible mistakes.
+>   
+>   Download: [.zip file](https://github.com/tdegeus/pyxtensor/zipball/master) | [.tar.gz file](https://github.com/tdegeus/pyxtensor/tarball/master).
+>   
+>   (c - [GPLv3](https://github.com/tdegeus/pyxtensor/blob/master/LICENSE)) T.W.J. de Geus (Tom) | tom@geus.me | www.geus.me | [github.com/tdegeus/pyxtensor](https://github.com/tdegeus/pyxtensor)
+   
+## Contents
+
 <!-- MarkdownTOC -->
 
 - [Introduction](#introduction)
 - [Getting pyxtensor](#getting-pyxtensor)
-  - [Using pip \(Python only\)](#using-pip-python-only)
   - [Using conda](#using-conda)
+  - [Using pip \(Python only\)](#using-pip-python-only)
   - [From source](#from-source)
 - [Usage](#usage)
   - [pybind11 module](#pybind11-module)
@@ -28,16 +38,16 @@ This library provides details for [pybind11](https://github.com/pybind/pybind11)
 
 There are two ways of practically using *pyxtensor*. One way is to 'install' the C++ headers somewhere and use CMake or pkg-config to find the C++ headers. The other way is to 'install' the Python library that comes with *pyxtensor* and let it 'install' the C++ headers in the correct Python folder, and use Python to find the C++ headers. 
 
-### Using pip (Python only)
-
-```bash
-pip install pyxtensor
-```
-
 ### Using conda
 
 ```bash
 conda install -c conda-forge pyxtensor
+```
+
+### Using pip (Python only)
+
+```bash
+pip install pyxtensor
 ```
 
 ### From source
@@ -176,13 +186,11 @@ make
 
 2.  Upload the changes to GitHub and create a new release there (with the correct version number).
 
-3.  Upload the package to PyPi:
+3.  Update the package at [conda-forge](https://github.com/conda-forge/pyxtensor-feedstock).
+
+4.  Upload the package to PyPi:
 
     ```bash
     python setup.py bdist_wheel --universal
     twine upload dist/*
     ```
-
-4.  Update the package at [conda-forge](https://github.com/conda-forge/pyxtensor-feedstock).
-
-
