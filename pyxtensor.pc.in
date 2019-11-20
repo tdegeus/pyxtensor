@@ -1,7 +1,7 @@
 prefix=@CMAKE_INSTALL_PREFIX@
 includedir=${prefix}/include
 
-Name: pyxtensor
+Name: @PROJECT_NAME@
 Description: pybind11 details for xtensor
-Version: @pyxtensor_VERSION@
+Version: @PYXTENSOR_VERSION@
 Cflags: -I${includedir}

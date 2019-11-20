@@ -67,7 +67,7 @@ before_install:
         export CXX=clang++ CC=clang;
       fi
 install:
-    # Define the version of miniconda to download
+    # Set environment using Conda
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         MINCONDA_OS=$MINCONDA_LINUX;
       elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
@@ -85,22 +85,13 @@ install:
     - conda install xtensor -c conda-forge
     - conda install pybind11 -c conda-forge
     # Install library
-    - mkdir build
-    - cd build
-    - cmake ..
+    - cmake .
     - sudo make install
-    - cd ..
-    - rm -rf build
     - python setup.py install
 script:
-    # Build example
     - cd example
-    - mkdir build
-    - cd build
-    - cmake ..
+    - cmake .
     - make
-    - cd ..
-    - rm -rf build
     - python setup.py build
     - python setup.py install
     - python main.py

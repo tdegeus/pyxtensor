@@ -7,13 +7,14 @@
 
 - [Introduction](#introduction)
 - [Getting pyxtensor](#getting-pyxtensor)
-  - [Using pip](#using-pip)
+  - [Using pip \(Python only\)](#using-pip-python-only)
   - [Using conda](#using-conda)
   - [From source](#from-source)
 - [Usage](#usage)
   - [pybind11 module](#pybind11-module)
   - [Compile project using `setup.py`](#compile-project-using-setuppy)
-- [Develop](#develop)
+  - [Compile project using `CMakeLists.txt`](#compile-project-using-cmakeliststxt)
+- [Create a new release](#create-a-new-release)
 
 <!-- /MarkdownTOC -->
 
@@ -21,11 +22,13 @@
 
 This library provides details for [pybind11](https://github.com/pybind/pybind11) such that an interface to NumPy arrays is automatically provided when including a function that takes any of the [xtensor](https://github.com/QuantStack/xtensor) classes as (return) argument(s). 
 
-> The behaviour is distinctly different from [xtensor-python](https://github.com/QuantStack/xtensor-python). The latter 'maps' NumPy arrays to a so-called `xt::pyarray` giving direct memory access to it. In contrast, [pyxtensor](https://github.com/tdegeus/pyxtensor) copies the NumPy object to a `xt::array` or `xt::tensor` and vice versa. This results in a simpler usage in which a C++ library can be exposed without any wrapper functions, however, with the disadvantage of using copies (that cost time, and that disallow in-place modifications).
+> The behaviour is distinctly different from [xtensor-python](https://github.com/QuantStack/xtensor-python). The latter 'maps' NumPy arrays to a so-called `xt::pyarray` giving direct memory access to it. In contrast, *pyxtensor* copies the NumPy object to a `xt::xarray` or `xt::xtensor` and vice versa. This results in a simpler usage in which a C++ library can be exposed without any wrapper functions, however, with the disadvantage of using copies (that cost time, and that disallow in-place modifications).
 
 ## Getting pyxtensor
 
-### Using pip
+There are two ways of practically using *pyxtensor*. One way is to 'install' the C++ headers somewhere and use CMake or pkg-config to find the C++ headers. The other way is to 'install' the Python library that comes with *pyxtensor* and let it 'install' the C++ headers in the correct Python folder, and use Python to find the C++ headers. 
+
+### Using pip (Python only)
 
 ```bash
 pip install pyxtensor
@@ -40,9 +43,16 @@ conda install -c conda-forge pyxtensor
 ### From source
 
 ```bash
+# Download pyxtensor
 git checkout https://github.com/tdegeus/pyxtensor.git
 cd pyxtensor
+
+# For Python use
 python setup.py install
+
+# For CMake or pkg-config use
+cmake .
+make install
 ```
 
 ## Usage
@@ -62,30 +72,30 @@ xt::xarray<double> timesTwo(const xt::xarray<double>& a)
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(example, m) 
+PYBIND11_MODULE(example, m)
 {
     m.def("timesTwo", &timesTwo);
 }
 ```
 
-As observed the [pybind11](https://github.com/pybind/pybind11) wrapper immediately acts on the [xtensor](https://github.com/QuantStack/xtensor) objects. See [pybind11_examples](https://github.com/tdegeus/pybind11_examples) for compilation strategies.
+[download "example.cpp"](./example/example.cpp)
+
+As observed the pybind11 wrapper immediately acts on the xtensor objects. 
 
 ### Compile project using `setup.py`
 
-Using the [pyxtensor](https://github.com/tdegeus/pyxtensor) Python module the `setup.py` of a [pybind11](https://github.com/pybind/pybind11) project can be as follows
+Using the *pyxtensor* Python module the `setup.py` can be as follows
 
 ```python
 from setuptools import setup, Extension
 
-import sys, re
-import setuptools
 import pybind11
 import pyxtensor
 
 ext_modules = [
   Extension(
-    'ModuleName',
-    ['path/to/pybind11/interface.cpp'],
+    'example',
+    ['example.cpp'],
     include_dirs=[
       pybind11.get_include(False),
       pybind11.get_include(True),
@@ -93,27 +103,28 @@ ext_modules = [
       pyxtensor.get_include(True),
       pyxtensor.find_xtensor(),
       pyxtensor.find_xtl(),
-      pyxtensor.find_eigen(),
     ],
     language='c++'
   ),
 ]
 
 setup(
-  name             = 'ModuleName',
-  description      = 'Short description',
+  name = 'example',
+  description = 'Short description',
   long_description = 'Long description',
-  version          = 'vX.X.X',
-  license          = 'MIT',
-  author           = 'Tom de Geus',
-  author_email     = '...',
-  url              = 'https://github.com/...',
-  ext_modules      = ext_modules,
-  install_requires = ['pybind11>=2.2.0', 'pyxtensor>=0.0.1'],
-  cmdclass         = {'build_ext': pyxtensor.BuildExt},
-  zip_safe         = False,
+  version = '0.0.1',
+  license = 'MIT',
+  author = 'Tom de Geus',
+  author_email = '...',
+  url = 'https://github.com/...',
+  ext_modules = ext_modules,
+  install_requires = ['pybind11>=2.2.0', 'pyxtensor>=0.1.0'],
+  cmdclass = {'build_ext': pyxtensor.BuildExt},
+  zip_safe = False,
 )
 ```
+
+[download "setup.py"](./example/setup.py)
 
 Compilation can then proceed using 
 
@@ -122,7 +133,44 @@ python setup.py build
 python setup.py install
 ```
 
-## Develop
+### Compile project using `CMakeLists.txt`
+
+Using *pyxtensor* the `CMakeLists.txt` can be as follows
+
+```cmake
+cmake_minimum_required(VERSION 3.1)
+
+project(example_cmake)
+
+find_package(xtl REQUIRED)
+find_package(xtensor REQUIRED)
+find_package(pybind11 REQUIRED)
+find_package(pyxtensor REQUIRED)
+
+add_library(example_cmake example.cpp)
+
+target_link_libraries(example_cmake
+    PRIVATE
+    pybind11::pybind11
+    xtensor
+    pyxtensor)
+
+set_target_properties(example_cmake
+    PROPERTIES
+    PREFIX "${PYTHON_MODULE_PREFIX}"
+    SUFFIX "${PYTHON_MODULE_EXTENSION}")
+```
+
+[download "CMakeLists.txt"](./example/CMakeLists.txt)
+
+Compilation can then proceed using 
+
+```bash
+cmake .
+make
+```
+
+## Create a new release
 
 1.  Update the version number as follows in `include/pyxtensor/pyxtensor.hpp``. 
 
@@ -135,6 +183,6 @@ python setup.py install
     twine upload dist/*
     ```
 
-4.  Update the package at conda-forge.
+4.  Update the package at [conda-forge](https://github.com/conda-forge/pyxtensor-feedstock).
 
 
