@@ -182,7 +182,7 @@ make
 
 ## Create a new release
 
-1.  Update the version number in `include/pyxtensor/pyxtensor.hpp``. 
+1.  Update the version number in `include/pyxtensor/pyxtensor.hpp`. 
 
 2.  Upload the changes to GitHub and create a new release there (with the correct version number).
 
