@@ -85,7 +85,7 @@ install:
     - conda install xtensor -c conda-forge
     - conda install pybind11 -c conda-forge
     - conda install pkgconfig -c conda-forge
-    # Install library
+    # Install the library
     - cmake .
     - sudo make install
     - python setup.py install
