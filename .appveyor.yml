@@ -43,6 +43,8 @@ install:
   - nmake
   - nmake install
   - python setup.py install
+  - conda list
+  - conda info
 
 build_script:
   # Compile (using CMake and Python) and run example
