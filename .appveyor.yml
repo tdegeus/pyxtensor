@@ -37,14 +37,13 @@ install:
   - conda install cmake -c conda-forge
   - conda install xtensor -c conda-forge
   - conda install pybind11 -c conda-forge
+  - conda install pkg-config -c conda-forge
   - conda install pkgconfig -c conda-forge
   # Install library
   - cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DCMAKE_BUILD_TYPE=RELEASE .
   - nmake
   - nmake install
   - python setup.py install
-  - conda list
-  - conda info
 
 build_script:
   # Compile (using CMake and Python) and run example
