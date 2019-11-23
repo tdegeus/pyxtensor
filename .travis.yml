@@ -84,15 +84,16 @@ install:
     - conda install cmake -c conda-forge
     - conda install xtensor -c conda-forge
     - conda install pybind11 -c conda-forge
-    # Install library
+    - conda install pkgconfig -c conda-forge
+    # Install the library
     - cmake .
     - sudo make install
     - python setup.py install
 script:
+    # Compile (using CMake and Python) and run example
     - cd example
     - cmake .
     - make
     - python setup.py build
     - python setup.py install
     - python main.py
-

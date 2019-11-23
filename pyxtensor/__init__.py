@@ -40,8 +40,12 @@ raises an error.
 (c) Sylvain Corlay, https://github.com/pybind/python_example
   '''
 
-  if   has_flag(compiler,'-std=c++14'): return '-std=c++14'
-  elif has_flag(compiler,'-std=c++11'): return '-std=c++11'
+  if has_flag(compiler,'-std=c++14'):
+    return '-std=c++14'
+
+  elif has_flag(compiler,'-std=c++11'):
+    return '-std=c++11'
+
   raise RuntimeError('Unsupported compiler: at least C++11 support is needed')
 
 # ==================================================================================================
@@ -109,6 +113,126 @@ Define class to build the extension.
 
 # ==================================================================================================
 
+def find_pybind11(hint=None):
+  r'''
+Try to find the pybind11 library. If successful the include directory is returned.
+  '''
+
+  # search with "get_include"
+  # -------------------------
+
+  if hint is None:
+
+    import pybind11
+
+    incl = pybind11.get_include(False)
+    if len(incl) > 0:
+      return incl
+
+    incl = pybind11.get_include(True)
+    if len(incl) > 0:
+      return incl
+
+  # search with pkgconfig
+  # ---------------------
+
+  if hint is None:
+
+    import pkgconfig
+
+    if pkgconfig.installed('pybind11','>0.4.0'):
+      return pkgconfig.parse('pybind11')['include_dirs'][0]
+
+  # manual search
+  # -------------
+
+  search_dirs = [] if hint is None else hint
+  search_dirs += [
+    "/usr/local/include",
+    "/usr/local/homebrew/include",
+    "/opt/local/var/macports/software",
+    "/opt/local/include",
+    "/usr/include",
+    "/usr/include/local",
+    "/usr/include",
+  ]
+
+  for d in search_dirs:
+    path = os.path.join(d, "pybind11", "xtensor_config.hpp")
+    if os.path.exists(path):
+      src = open(path, "r").read()
+      v1 = re.findall("#define PYBIND11_VERSION_MAJOR (.+)", src)
+      v2 = re.findall("#define PYBIND11_VERSION_MINOR (.+)", src)
+      v3 = re.findall("#define PYBIND11_VERSION_PATCH (.+)", src)
+      if not len(v1) or not len(v2) or not len(v3):
+        continue
+      v = "{0}.{1}.{2}".format(v1[0], v2[0], v3[0])
+      print("Found pybind11 version {0} in: {1}".format(v, d))
+      return d
+
+  return None
+
+# ==================================================================================================
+
+def find_pyxtensor(hint=None):
+  r'''
+Try to find the pyxtensor library. If successful the include directory is returned.
+  '''
+
+  # search with "get_include"
+  # -------------------------
+
+  if hint is None:
+
+    incl = get_include(False)
+    if len(incl) > 0:
+      return incl
+
+    incl = get_include(True)
+    if len(incl) > 0:
+      return incl
+
+  # search with pkgconfig
+  # ---------------------
+
+  if hint is None:
+
+    import pkgconfig
+
+    if pkgconfig.installed('pyxtensor','>0.4.0'):
+      return pkgconfig.parse('pyxtensor')['include_dirs'][0]
+
+  # manual search
+  # -------------
+
+  search_dirs = [] if hint is None else hint
+  search_dirs += [
+    "/usr/local/include",
+    "/usr/local/homebrew/include",
+    "/opt/local/var/macports/software",
+    "/opt/local/include",
+    "/usr/include",
+    "/usr/include/local",
+    "/usr/include",
+  ]
+
+  for d in search_dirs:
+    path = os.path.join(d, "pyxtensor", "xtensor_config.hpp")
+    if os.path.exists(path):
+      src = open(path, "r").read()
+      v1 = re.findall("#define PYXTENSOR_VERSION_MAJOR (.+)", src)
+      v2 = re.findall("#define PYXTENSOR_VERSION_MINOR (.+)", src)
+      v3 = re.findall("#define PYXTENSOR_VERSION_PATCH (.+)", src)
+      if not len(v1) or not len(v2) or not len(v3):
+        continue
+      v = "{0}.{1}.{2}".format(v1[0], v2[0], v3[0])
+      print("Found pyxtensor version {0} in: {1}".format(v, d))
+      return d
+
+  return None
+
+# ==================================================================================================
+
 def find_xtl(hint=None):
   r'''
 Try to find the xtl library. If successful the include directory is returned.
@@ -117,15 +241,12 @@ Try to find the xtl library. If successful the include directory is returned.
   # search with pkgconfig
   # ---------------------
 
-  try:
+  if hint is None:
 
     import pkgconfig
 
     if pkgconfig.installed('xtl','>0.4.0'):
       return pkgconfig.parse('xtl')['include_dirs'][0]
-
-  except:
-    pass
 
   # manual search
   # -------------
@@ -166,15 +287,12 @@ Try to find the xtensor library. If successful the include directory is returned
   # search with pkgconfig
   # ---------------------
 
-  try:
+  if hint is None:
 
     import pkgconfig
 
     if pkgconfig.installed('xtensor','>0.16.0'):
       return pkgconfig.parse('xtensor')['include_dirs'][0]
-
-  except:
-    pass
 
   # manual search
   # -------------
@@ -216,15 +334,12 @@ Try to find the xsimd library. If successful the include directory is returned.
   # search with pkgconfig
   # ---------------------
 
-  try:
+  if hint is None:
 
     import pkgconfig
 
     if pkgconfig.installed('xsimd','>0.16.0'):
       return pkgconfig.parse('xsimd')['include_dirs'][0]
-
-  except:
-    pass
 
   # manual search
   # -------------
@@ -266,15 +381,12 @@ Try to find the Eigen library. If successful the include directory is returned.
   # search with pkgconfig
   # ---------------------
 
-  try:
+  if hint is None:
 
     import pkgconfig
 
     if pkgconfig.installed('eigen3','>3.0.0'):
       return pkgconfig.parse('eigen3')['include_dirs'][0]
-
-  except:
-    pass
 
   # manual search
   # -------------
