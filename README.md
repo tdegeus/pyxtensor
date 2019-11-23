@@ -107,13 +107,10 @@ ext_modules = [
     'example',
     ['example.cpp'],
     include_dirs=[
-      pybind11.get_include(False),
-      pybind11.get_include(True),
-      pyxtensor.get_include(False),
-      pyxtensor.get_include(True),
+      pyxtensor.find_pyxtensor(),
+      pyxtensor.find_pybind11(),
       pyxtensor.find_xtensor(),
-      pyxtensor.find_xtl(),
-    ],
+      pyxtensor.find_xtl()],
     language='c++'
   ),
 ]
