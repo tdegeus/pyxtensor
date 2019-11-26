@@ -24,14 +24,14 @@
 #define PYXTENSOR_VERSION_PATCH 1
 
 #define PYXTENSOR_VERSION_AT_LEAST(x,y,z) \
-  (PYXTENSOR_VERSION_MAJOR>x || (PYXTENSOR_VERSION_MAJOR>=x && \
-  (PYXTENSOR_VERSION_MINOR>y || (PYXTENSOR_VERSION_MINOR>=y && \
-                                 PYXTENSOR_VERSION_PATCH>=z))))
+  (PYXTENSOR_VERSION_MAJOR > x || (PYXTENSOR_VERSION_MAJOR >= x && \
+  (PYXTENSOR_VERSION_MINOR > y || (PYXTENSOR_VERSION_MINOR >= y && \
+                                   PYXTENSOR_VERSION_PATCH >= z))))
 
 #define PYXTENSOR_VERSION(x,y,z) \
-  (PYXTENSOR_VERSION_MAJOR==x && \
-   PYXTENSOR_VERSION_MINOR==y && \
-   PYXTENSOR_VERSION_PATCH==z)
+  (PYXTENSOR_VERSION_MAJOR == x && \
+   PYXTENSOR_VERSION_MINOR == y && \
+   PYXTENSOR_VERSION_PATCH == z)
 
 // =================================================================================================
 
