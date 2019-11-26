@@ -2,6 +2,7 @@
 
 [![Travis](https://travis-ci.org/tdegeus/pyxtensor.svg?branch=master)](https://travis-ci.org/tdegeus/pyxtensor)
 [![Appveyor](https://ci.appveyor.com/api/projects/status/0s6ytkty29f110ks?svg=true)](https://ci.appveyor.com/project/tdegeus/pyxtensor)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/pyxtensor.svg)](https://anaconda.org/conda-forge/pyxtensor)
 
 >   **Disclaimer**
 >   
@@ -106,13 +107,12 @@ ext_modules = [
   Extension(
     'example',
     ['example.cpp'],
-    include_dirs=[
+    include_dirs = [
       pyxtensor.find_pyxtensor(),
       pyxtensor.find_pybind11(),
       pyxtensor.find_xtensor(),
       pyxtensor.find_xtl()],
-    language='c++'
-  ),
+    language = 'c++')
 ]
 
 setup(
@@ -139,6 +139,53 @@ Compilation can then proceed using
 python setup.py build
 python setup.py install
 ```
+
+>  For certain xtensor-based codes xsimd is advisable. To enable one could do the following instead:
+>  
+>  
+>  ```python
+>  from setuptools import setup, Extension
+>  
+>  import pybind11
+>  import pyxtensor
+>  
+>  include_dirs = [
+>    pyxtensor.find_pyxtensor(),
+>    pyxtensor.find_pybind11(),
+>    pyxtensor.find_xtensor(),
+>    pyxtensor.find_xtl()]
+>  
+>  build = pyxtensor.BuildExt
+>  
+>  xsimd = pyxtensor.find_xsimd()
+>  if xsimd:
+>    if len(xsimd) > 0:
+>      include_dirs += [xsimd]
+>      build.c_opts['unix'] += ['-march=native', '-DXTENSOR_USE_XSIMD']
+>      build.c_opts['msvc'] += ['/DXTENSOR_USE_XSIMD']
+>  
+>  ext_modules = [
+>    Extension(
+>      'example',
+>      ['example.cpp'],
+>      include_dirs = include_dirs,
+>      language = 'c++')
+>  ]
+>  
+>  setup(
+>    name = 'example',
+>    description = 'Short description',
+>    long_description = 'Long description',
+>    version = '0.0.1',
+>    license = 'MIT',
+>    author = 'Tom de Geus',
+>    author_email = '...',
+>    url = 'https://github.com/...',
+>    ext_modules = ext_modules,
+>    install_requires = ['pybind11>=2.2.0', 'pyxtensor>=0.1.0'],
+>    cmdclass = {'build_ext': build},
+>    zip_safe = False)
+>  ```
 
 ### Compile project using `CMakeLists.txt`
 

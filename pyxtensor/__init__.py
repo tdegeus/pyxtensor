@@ -92,7 +92,7 @@ Define class to build the extension.
 
   c_opts = {
     'msvc': ['/EHsc'],
-    'unix': ['-O3', '-march=native'],
+    'unix': ['-O3'],
   }
 
   if sys.platform == 'darwin':
