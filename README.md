@@ -2,6 +2,7 @@
 
 [![Travis](https://travis-ci.org/tdegeus/pyxtensor.svg?branch=master)](https://travis-ci.org/tdegeus/pyxtensor)
 [![Appveyor](https://ci.appveyor.com/api/projects/status/0s6ytkty29f110ks?svg=true)](https://ci.appveyor.com/project/tdegeus/pyxtensor)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/pyxtensor.svg)](https://anaconda.org/conda-forge/pyxtensor)
 
 >   **Disclaimer**
 >   
