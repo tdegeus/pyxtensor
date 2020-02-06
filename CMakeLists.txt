@@ -1,26 +1,23 @@
-
 cmake_minimum_required(VERSION 3.0)
 
-# Options
-# =======
+# Basic settings
+# ==============
 
 project(pyxtensor)
 
-# Internals
-# =========
-
-set(PYXTENSOR_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+option(BUILD_TESTS "${PROJECT_NAME} Build tests" OFF)
 
 # Version
 # =======
 
-file(
-    STRINGS "${PYXTENSOR_INCLUDE_DIR}/pyxtensor/pyxtensor.hpp" pyxtensor_version_defines
-    REGEX "#define PYXTENSOR_VERSION_(MAJOR|MINOR|PATCH)")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/include/pyxtensor/pyxtensor.hpp" pyxtensor_version_defines
+     REGEX "#define PYXTENSOR_VERSION_(MAJOR|MINOR|PATCH)")
 
 foreach(ver ${pyxtensor_version_defines})
     if(ver MATCHES "#define PYXTENSOR_VERSION_(MAJOR|MINOR|PATCH) +([^ ]+)$")
-        set(PYXTENSOR_VERSION_${CMAKE_MATCH_1} "${CMAKE_MATCH_2}" CACHE INTERNAL "")
+    set(PYXTENSOR_VERSION_${CMAKE_MATCH_1}
+        "${CMAKE_MATCH_2}"
+        CACHE INTERNAL "")
     endif()
 endforeach()
 
@@ -29,21 +26,18 @@ set(PYXTENSOR_VERSION
 
 message(STATUS "Building pyxtensor v${PYXTENSOR_VERSION}")
 
-# Build
-# =====
+# Set target
+# ==========
 
-set(PYXTENSOR_HEADERS
-    ${PYXTENSOR_INCLUDE_DIR}/pyxtensor/pyxtensor.hpp
-    ${PYXTENSOR_INCLUDE_DIR}/pyxtensor/pybind11_xarray.hpp
-    ${PYXTENSOR_INCLUDE_DIR}/pyxtensor/pybind11_xtensor.hpp
-    ${PYXTENSOR_INCLUDE_DIR}/pyxtensor/pybind11_xtensor_fixed.hpp)
+find_package(xtensor REQUIRED)
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(pyxtensor INTERFACE)
 
-target_include_directories(
-    ${PROJECT_NAME} INTERFACE
-    $<BUILD_INTERFACE:${PYXTENSOR_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:include>)
+target_include_directories(pyxtensor INTERFACE
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+target_link_libraries(pyxtensor INTERFACE xtensor)
 
 # Installation
 # ============
@@ -51,54 +45,30 @@ target_include_directories(
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
-install(
-    TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}-targets)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include)
 
-export(
-    EXPORT ${PROJECT_NAME}-targets
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
+install(TARGETS pyxtensor EXPORT pyxtensor-targets)
 
 install(
-    FILES ${PYXTENSOR_HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+    EXPORT pyxtensor-targets
+    FILE pyxtensorTargets.cmake
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/pyxtensor")
 
-set(PYXTENSOR_CMAKECONFIG_INSTALL_DIR
-    "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE
-    STRING "install path for ${PROJECT_NAME}Config.cmake")
-
-configure_package_config_file(
-    "pyxtensorConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    INSTALL_DESTINATION ${PYXTENSOR_CMAKECONFIG_INSTALL_DIR})
-
-set(_PYXTENSOR_CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P})
-
+set(_PYXTENSOR ${CMAKE_SIZEOF_VOID_P})
 unset(CMAKE_SIZEOF_VOID_P)
 
-write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/pyxtensorConfigVersion.cmake"
     VERSION ${PYXTENSOR_VERSION}
     COMPATIBILITY AnyNewerVersion)
 
-set(CMAKE_SIZEOF_VOID_P ${_PYXTENSOR_CMAKE_SIZEOF_VOID_P})
+set(CMAKE_SIZEOF_VOID_P ${_PYXTENSOR})
 
-install(
-    FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-    DESTINATION ${PYXTENSOR_CMAKECONFIG_INSTALL_DIR})
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/pyxtensorConfig.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/pyxtensorConfigVersion.cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/pyxtensor")
 
-install(
-    EXPORT ${PROJECT_NAME}-targets
-    FILE "${PROJECT_NAME}Targets.cmake"
-    DESTINATION ${PYXTENSOR_CMAKECONFIG_INSTALL_DIR})
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pyxtensor.pc.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/pyxtensor.pc" @ONLY)
 
-configure_file(
-    "pyxtensor.pc.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
-     @ONLY)
-
-install(
-    FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig/")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pyxtensor.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig/")
