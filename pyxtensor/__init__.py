@@ -140,7 +140,7 @@ Try to find the pybind11 library. If successful the include directory is returne
 
     import pkgconfig
 
-    if pkgconfig.installed('pybind11','>0.4.0'):
+    if pkgconfig.exists('pybind11'):
       return pkgconfig.parse('pybind11')['include_dirs'][0]
 
   # manual search
@@ -199,7 +199,7 @@ Try to find the pyxtensor library. If successful the include directory is return
 
     import pkgconfig
 
-    if pkgconfig.installed('pyxtensor','>0.4.0'):
+    if pkgconfig.exists('pyxtensor'):
       return pkgconfig.parse('pyxtensor')['include_dirs'][0]
 
   # manual search
@@ -245,7 +245,7 @@ Try to find the xtl library. If successful the include directory is returned.
 
     import pkgconfig
 
-    if pkgconfig.installed('xtl','>0.4.0'):
+    if pkgconfig.exists('xtl'):
       return pkgconfig.parse('xtl')['include_dirs'][0]
 
   # manual search
@@ -291,7 +291,7 @@ Try to find the xtensor library. If successful the include directory is returned
 
     import pkgconfig
 
-    if pkgconfig.installed('xtensor','>0.16.0'):
+    if pkgconfig.exists('xtensor'):
       return pkgconfig.parse('xtensor')['include_dirs'][0]
 
   # manual search
@@ -338,7 +338,7 @@ Try to find the xsimd library. If successful the include directory is returned.
 
     import pkgconfig
 
-    if pkgconfig.installed('xsimd','>0.16.0'):
+    if pkgconfig.exists('xsimd'):
       return pkgconfig.parse('xsimd')['include_dirs'][0]
 
   # manual search
@@ -385,7 +385,7 @@ Try to find the Eigen library. If successful the include directory is returned.
 
     import pkgconfig
 
-    if pkgconfig.installed('eigen3','>3.0.0'):
+    if pkgconfig.exists('eigen3'):
       return pkgconfig.parse('eigen3')['include_dirs'][0]
 
   # manual search
