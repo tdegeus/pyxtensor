@@ -29,7 +29,9 @@ message(STATUS "Building pyxtensor v${PYXTENSOR_VERSION}")
 # Set target
 # ==========
 
-find_package(xtensor REQUIRED)
+if(NOT TARGET xtensor)
+    find_package(xtensor REQUIRED)
+endif()
 
 add_library(pyxtensor INTERFACE)
 
