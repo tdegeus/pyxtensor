@@ -50,7 +50,7 @@ public:
     for ( ssize_t i = 0 ; i < N ; ++i ) shape[i] = buf.shape()[i];
 
     // - all checks passed : create the proper C++ variable
-    value = xt::empty<T>(shape);
+    value.resize(shape);
     // - copy all data
     std::copy(buf.data(), buf.data()+buf.size(), value.begin());
 
