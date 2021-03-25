@@ -63,9 +63,11 @@ jobs:
         cmake --build .
 
     - name: Compile example (using Python)
+      working-directory: example
       run: |
         python setup.py build
         python setup.py install
 
     - name: Run example
+      working-directory: example
       run: python main.py
