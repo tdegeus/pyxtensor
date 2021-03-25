@@ -22,9 +22,9 @@ template<typename T> struct type_caster<xt::xarray<T>>
 {
 public:
 
-    using tensor = xt::xarray<T>;
+    using type = xt::xarray<T>;
 
-    PYBIND11_TYPE_CASTER(tensor, _("numpy.ndarray[") + npy_format_descriptor<T>::name + _("]"));
+    PYBIND11_TYPE_CASTER(type, _("numpy.ndarray[") + npy_format_descriptor<T>::name + _("]"));
 
     // Python -> C++
     // -------------

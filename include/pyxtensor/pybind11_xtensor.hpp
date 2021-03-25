@@ -22,9 +22,9 @@ template<typename T, size_t N> struct type_caster<xt::xtensor<T, N>>
 {
 public:
 
-    using tensor = xt::xtensor<T, N>;
+    using type = xt::xtensor<T, N>;
 
-    PYBIND11_TYPE_CASTER(tensor, _("numpy.ndarray[") + npy_format_descriptor<T>::name + _("](rank=" + std::string(N) + ")"));
+    PYBIND11_TYPE_CASTER(type, _("numpy.ndarray[") + npy_format_descriptor<T>::name + _("]"));
 
     // Python -> C++
     // -------------
