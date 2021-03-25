@@ -1,7 +1,8 @@
 import example
 import numpy as np
 
-a = np.arange(5)
-b = example.timesTwo(a)
+d = np.arange(25).reshape(5, 5)
 
-assert np.allclose(2.0 * a, b)
+assert np.allclose(2.0 * d, example.arrayTimesTwo(d))
+assert np.allclose(2.0 * d, example.tensorTimesTwo(d))
+assert np.allclose(2.0 * d, example.fixedTimesTwo(d))
