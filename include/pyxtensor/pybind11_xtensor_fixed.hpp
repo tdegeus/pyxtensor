@@ -22,9 +22,9 @@ template<typename T, typename S> struct type_caster<xt::xtensor_fixed<T, S>>
 {
 public:
 
-    using tensor = xt::xtensor_fixed<T, S>;
+    using type = xt::xtensor_fixed<T, S>;
 
-    PYBIND11_TYPE_CASTER(tensor, _("numpy.ndarray[") + npy_format_descriptor<T>::name + _("](fixed-shape)"));
+    PYBIND11_TYPE_CASTER(type, _("numpy.ndarray[") + npy_format_descriptor<T>::name + _("]"));
 
     // Python -> C++
     // -------------
