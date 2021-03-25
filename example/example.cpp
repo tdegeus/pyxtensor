@@ -1,6 +1,6 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor/xtensor.hpp>
-#include <xtensor/xfixed.hpp.hpp>
+#include <xtensor/xfixed.hpp>
 #include <pyxtensor/pyxarray.hpp>
 #include <pyxtensor/pyxtensor.hpp>
 #include <pyxtensor/pybind11_xtensor_fixed.hpp>
