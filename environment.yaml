@@ -1,0 +1,10 @@
+channels:
+  - conda-forge
+dependencies:
+    - python
+    - pybind11
+    - numpy
+    - xtensor
+    - cmake
+    - pkgconfig
+    - setuptools_scm
