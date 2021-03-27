@@ -67,7 +67,7 @@ public:
         }
 
         // - all checks passed : create the proper C++ variable
-        value.resize(shape);
+        value = type(shape);
         std::copy(buf.data(), buf.data()+buf.size(), value.begin());
 
         // - signal successful variable creation
