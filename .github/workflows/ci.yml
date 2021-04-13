@@ -46,6 +46,9 @@ jobs:
         activate-environment: test
         auto-activate-base: false
 
+    - name: Set dummy version
+      run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=ci" >> $GITHUB_ENV
+
     - name: Configure using CMake
       run: cmake -Bbuild -DCMAKE_INSTALL_PREFIX:PATH="${CONDA_PREFIX}"
 
