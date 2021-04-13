@@ -24,9 +24,8 @@
   - [From source](#from-source)
 - [Usage](#usage)
   - [pybind11 module](#pybind11-module)
-  - [Compile project using `setup.py`](#compile-project-using-setuppy)
-  - [Compile project using `CMakeLists.txt`](#compile-project-using-cmakeliststxt)
-- [Create a new release](#create-a-new-release)
+  - [Compile project using Python](#compile-project-using-python)
+  - [Compile project using CMake & Python](#compile-project-using-cmake--python)
 
 <!-- /MarkdownTOC -->
 
@@ -90,11 +89,11 @@ PYBIND11_MODULE(example, m)
 }
 ```
 
-[download "example.cpp"](./example/example.cpp)
+[download "example.cpp"](./examples/cmake-build/example.cpp)
 
 As observed the pybind11 wrapper immediately acts on the xtensor objects. 
 
-### Compile project using `setup.py`
+### Compile project using Python
 
 Using the *pyxtensor* Python module the `setup.py` can be as follows
 
@@ -105,40 +104,46 @@ import pybind11
 import pyxtensor
 
 ext_modules = [
-  Extension(
-    'example',
-    ['example.cpp'],
-    include_dirs = [
-      pyxtensor.find_pyxtensor(),
-      pyxtensor.find_pybind11(),
-      pyxtensor.find_xtensor(),
-      pyxtensor.find_xtl()],
-    language = 'c++')
+    Extension(
+        'example',
+        ['example.cpp'],
+        include_dirs=[
+            pyxtensor.find_pyxtensor(),
+            pyxtensor.find_pybind11(),
+            pyxtensor.find_xtensor()],
+        language='c++'
+    ),
 ]
 
 setup(
-  name = 'example',
-  description = 'Short description',
-  long_description = 'Long description',
-  version = '0.0.1',
-  license = 'MIT',
-  author = 'Tom de Geus',
-  author_email = '...',
-  url = 'https://github.com/...',
-  ext_modules = ext_modules,
-  install_requires = ['pybind11>=2.2.0', 'pyxtensor>=0.1.0'],
-  cmdclass = {'build_ext': pyxtensor.BuildExt},
-  zip_safe = False,
+    name='example',
+    description='Short description',
+    long_description='Long description',
+    version='0.0.1',
+    license='MIT',
+    author='Tom de Geus',
+    author_email='...',
+    url='https://github.com/tdegeus/pyxtensor',
+    ext_modules=ext_modules,
+    setup_requires=['pybind11', 'pyxtensor'],
+    cmdclass={'build_ext': pyxtensor.BuildExt},
+    zip_safe=False,
 )
 ```
 
-[download "setup.py"](./example/setup.py)
+[download "setup.py"](./examples/cmake-build/setup.py)
 
 Compilation can then proceed using 
 
 ```bash
 python setup.py build
 python setup.py install
+```
+
+or 
+
+```bash
+python -m pip install . -vvv
 ```
 
 >  For certain xtensor-based codes xsimd is advisable. To enable one could do the following instead:
@@ -151,91 +156,100 @@ python setup.py install
 >  import pyxtensor
 >  
 >  include_dirs = [
->    pyxtensor.find_pyxtensor(),
->    pyxtensor.find_pybind11(),
->    pyxtensor.find_xtensor(),
->    pyxtensor.find_xtl()]
+>      pyxtensor.find_pyxtensor(),
+>      pyxtensor.find_pybind11(),
+>      pyxtensor.find_xtensor(),
+>      pyxtensor.find_xtl()]
 >  
 >  build = pyxtensor.BuildExt
 >  
 >  xsimd = pyxtensor.find_xsimd()
 >  if xsimd:
->    if len(xsimd) > 0:
->      include_dirs += [xsimd]
->      build.c_opts['unix'] += ['-march=native', '-DXTENSOR_USE_XSIMD']
->      build.c_opts['msvc'] += ['/DXTENSOR_USE_XSIMD']
+>      if len(xsimd) > 0:
+>          include_dirs += [xsimd]
+>          build.c_opts['unix'] += ['-march=native', '-DXTENSOR_USE_XSIMD']
+>          build.c_opts['msvc'] += ['/DXTENSOR_USE_XSIMD']
 >  
 >  ext_modules = [
->    Extension(
->      'example',
->      ['example.cpp'],
->      include_dirs = include_dirs,
->      language = 'c++')
+>      Extension(
+>          'example',
+>          ['example.cpp'],
+>          include_dirs = include_dirs,
+>          language = 'c++')
 >  ]
 >  
 >  setup(
->    name = 'example',
->    description = 'Short description',
->    long_description = 'Long description',
->    version = '0.0.1',
->    license = 'MIT',
->    author = 'Tom de Geus',
->    author_email = '...',
->    url = 'https://github.com/...',
->    ext_modules = ext_modules,
->    install_requires = ['pybind11>=2.2.0', 'pyxtensor>=0.1.0'],
->    cmdclass = {'build_ext': build},
->    zip_safe = False)
+>    name='example',
+>    description='Short description',
+>    long_description='Long description',
+>    version='0.0.1',
+>    license='MIT',
+>    author='Tom de Geus',
+>    author_email='...',
+>    url='https://github.com/...',
+>    ext_modules=ext_modules,
+>    setup_requires=['pybind11', 'pyxtensor'],
+>    cmdclass={'build_ext': build},
+>    zip_safe=False)
 >  ```
 
-### Compile project using `CMakeLists.txt`
+### Compile project using CMake & Python
 
 Using *pyxtensor* the `CMakeLists.txt` can be as follows
 
 ```cmake
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.4...3.18)
+project(example)
 
-project(example_cmake)
-
-find_package(xtl REQUIRED)
-find_package(xtensor REQUIRED)
-find_package(pybind11 REQUIRED)
+find_package(pybind11 CONFIG REQUIRED)
 find_package(pyxtensor REQUIRED)
+find_package(xtensor REQUIRED)
 
-add_library(example_cmake example.cpp)
+pybind11_add_module(example example.cpp)
 
-target_link_libraries(example_cmake
-    PRIVATE
-    pybind11::pybind11
-    xtensor
-    pyxtensor)
+target_link_libraries(example PUBLIC
+    pybind11::module
+    pyxtensor
+    xtensor::optimize)
 
-set_target_properties(example_cmake
-    PROPERTIES
-    PREFIX "${PYTHON_MODULE_PREFIX}"
-    SUFFIX "${PYTHON_MODULE_EXTENSION}")
+# MYVERSION_INFO is defined by setup.py and passed into the C++ code as a define (VERSION_INFO) here
+target_compile_definitions(example PRIVATE VERSION_INFO=${MYVERSION_INFO})
 ```
 
-[download "CMakeLists.txt"](./example/CMakeLists.txt)
+[download "CMakeLists.txt"](./examples/cmake-build/CMakeLists.txt)
+
+with the corresponding `setup.py`:
+
+```python
+import pyxtensor
+from setuptools import setup, Extension
+
+setup(
+    name='example',
+    description='Short description',
+    long_description='Long description',
+    version='0.0.1',
+    license='MIT',
+    author='Tom de Geus',
+    author_email='...',
+    url='https://github.com/tdegeus/pyxtensor',
+    ext_modules=[pyxtensor.CMakeExtension("example")],
+    cmdclass={"build_ext": pyxtensor.CMakeBuild},
+    zip_safe=False,
+)
+```
+
+[download "setup.py"](./examples/cmake-build/setup.py)
 
 Compilation can then proceed using 
 
 ```bash
-cmake .
-make
+python setup.py build
+python setup.py install
 ```
 
-## Create a new release
+or 
 
-1.  Update the version number in `include/pyxtensor/pyxtensor.hpp`. 
-
-2.  Upload the changes to GitHub and create a new release there (with the correct version number).
-
-3.  Update the package at [conda-forge](https://github.com/conda-forge/pyxtensor-feedstock).
-
-4.  Upload the package to PyPi:
-
-    ```bash
-    python setup.py bdist_wheel --universal
-    twine upload dist/*
-    ```
+```bash
+python -m pip install . -vvv
+```
