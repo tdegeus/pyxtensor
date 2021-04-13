@@ -59,18 +59,26 @@ jobs:
     - name: Install using Python
       run: python -m pip install .
 
-    - name: Compile example (using CMake)
-      working-directory: example
-      run: |
-        cmake .
-        cmake --build .
+    - name: Compile example - python-build
+      working-directory: examples/python-build
+      run: python -m pip install . -vvv
 
-    - name: Compile example (using Python)
-      working-directory: example
-      run: |
-        python setup.py build
-        python setup.py install
-
-    - name: Run example
-      working-directory: example
+    - name: Run example - python-build
+      working-directory: examples/python-build
       run: python main.py
+
+    - name: Remove example - python-build
+      working-directory: examples/python-build
+      run: python -m pip uninstall -y example
+
+    - name: Compile example - cmake-build
+      working-directory: examples/cmake-build
+      run: python -m pip install . -vvv
+
+    - name: Run example - cmake-build
+      working-directory: examples/cmake-build
+      run: python main.py
+
+    - name: Remove example - cmake-build
+      working-directory: examples/cmake-build
+      run: python -m pip uninstall -y example
