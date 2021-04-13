@@ -9,8 +9,7 @@ pybind11_add_module(example example.cpp)
 
 target_link_libraries(example PUBLIC
     pybind11::module
-    pyxtensor
-    xtensor::optimize)
+    pyxtensor)
 
 # MYVERSION_INFO is defined by setup.py and passed into the C++ code as a define (VERSION_INFO) here
 target_compile_definitions(example PRIVATE VERSION_INFO=${MYVERSION_INFO})
