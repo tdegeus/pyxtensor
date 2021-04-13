@@ -35,6 +35,7 @@ install:
   - conda install -c conda-forge python
   - conda install -c conda-forge numpy
   - conda install -c conda-forge cmake
+  - conda install -c conda-forge ninja
   - conda install -c conda-forge xtensor
   - conda install -c conda-forge pybind11
   - conda install -c conda-forge pkgconfig
@@ -45,10 +46,15 @@ install:
   - python setup.py install
 
 build_script:
-  # Compile (using CMake and Python) and run example
-  - cd example
-  - cmake -G "NMake Makefiles" .
-  - nmake
-  - python setup.py build
-  - python setup.py install
+  # example
+  - cd examples/python-build
+  - python -m pip install . -vvv
   - python main.py
+  - python -m pip uninstall -y example
+  - cd ../..
+  # example
+  - cd examples/cmake-build
+  - python -m pip install . -vvv
+  - python main.py
+  - python -m pip uninstall -y example
+  - cd ../..
