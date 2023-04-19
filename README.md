@@ -1,3 +1,5 @@
+Now fully covered in xtensor-python
+
 # pyxtensor
 
 [![CI](https://github.com/tdegeus/pyxtensor/workflows/CI/badge.svg)](https://github.com/tdegeus/pyxtensor/actions)
